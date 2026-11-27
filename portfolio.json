@@ -1,5 +1,5 @@
 {
-  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$schema": "urn:luciana-pereira:portfolio-metadata:schema:1",
   "schemaVersion": 1,
   "id": "voxnexo",
   "slug": "voxnexo",
@@ -12,62 +12,27 @@
     "en": "Windows application that transcribes English audio played by the computer and displays a local Portuguese translation."
   },
   "category": "ArchitectureEngineering",
-  "status": "Completed",
+  "status": "MvpCompleted",
   "badgeLabel": {
     "pt": "Aplicativo desktop",
     "en": "Desktop application"
   },
-  "studyType": "AppliedProject",
   "originType": "Personal",
-  "date": null,
-  "endDate": null,
-  "estimatedHours": null,
   "technologies": [
-    {
-      "pt": "Python 3.13",
-      "en": "Python 3.13"
-    },
-    {
-      "pt": "Tkinter",
-      "en": "Tkinter"
-    },
-    {
-      "pt": "WASAPI loopback",
-      "en": "WASAPI loopback"
-    },
-    {
-      "pt": "faster-whisper",
-      "en": "faster-whisper"
-    },
-    {
-      "pt": "Argos Translate",
-      "en": "Argos Translate"
-    },
-    {
-      "pt": "PyInstaller",
-      "en": "PyInstaller"
-    },
-    {
-      "pt": "Inno Setup",
-      "en": "Inno Setup"
-    },
-    {
-      "pt": "pytest",
-      "en": "pytest"
-    },
-    {
-      "pt": "Ruff",
-      "en": "Ruff"
-    }
+    "Python 3.13",
+    "Tkinter",
+    "WASAPI loopback",
+    "faster-whisper",
+    "Argos Translate",
+    "PyInstaller",
+    "Inno Setup",
+    "pytest",
+    "Ruff"
   ],
   "highlightNote": {
     "pt": "Captura exclusivamente o áudio de reprodução do Windows; o processamento de voz e a tradução acontecem localmente, sem abrir o microfone.",
     "en": "Captures Windows playback audio exclusively; speech processing and translation run locally without opening the microphone."
   },
-  "docsUrl": null,
-  "demoUrl": null,
-  "coverVisual": null,
-  "thumbnail": null,
   "context": {
     "pt": "O VoxNexo auxilia no acompanhamento de vídeos e reuniões em inglês. O usuário seleciona a saída de áudio do computador, inicia a captura e acompanha na interface os trechos originais e suas traduções para português.",
     "en": "VoxNexo helps users follow English-language videos and meetings. The user selects the computer's audio output, starts capture, and follows the original segments and their Portuguese translations in the interface."
@@ -117,7 +82,6 @@
       "pt": "Aplicativo desktop em camadas: interface Tkinter, serviço de captura e tradução em segundo plano e módulo independente de exportação DOCX. A captura e a inferência trabalham em threads separadas e comunicam eventos à interface por filas.",
       "en": "Layered desktop application: a Tkinter interface, a background capture and translation service, and an independent DOCX export module. Capture and inference run on separate threads and send events to the interface through queues."
     },
-    "diagram": null,
     "diagramDescription": {
       "pt": "Fluxo: saída de áudio do Windows → WASAPI loopback → fila local limitada → faster-whisper → Argos Translate → interface Tkinter; a exportação DOCX é iniciada separadamente pelo usuário.",
       "en": "Flow: Windows audio output → WASAPI loopback → bounded local queue → faster-whisper → Argos Translate → Tkinter interface; DOCX export is initiated separately by the user."
@@ -138,10 +102,12 @@
         "pt": "Usar WASAPI loopback pela saída de áudio selecionada e não abrir dispositivos de microfone.",
         "en": "Use WASAPI loopback from the selected audio output and do not open microphone devices."
       },
-      "consequences": {
-        "pt": "A captura fica restrita ao áudio de reprodução do Windows e a fonte é escolhida explicitamente pelo usuário.",
-        "en": "Capture is limited to Windows playback audio, and the source is explicitly selected by the user."
-      }
+      "consequences": [
+        {
+          "pt": "A captura fica restrita ao áudio de reprodução do Windows e a fonte é escolhida explicitamente pelo usuário.",
+          "en": "Capture is limited to Windows playback audio, and the source is explicitly selected by the user."
+        }
+      ]
     },
     {
       "id": "ADR-002",
@@ -157,10 +123,12 @@
         "pt": "Executar faster-whisper e Argos Translate localmente após baixar os modelos para o cache do usuário.",
         "en": "Run faster-whisper and Argos Translate locally after downloading models to the user's cache."
       },
-      "consequences": {
-        "pt": "A inferência não envia trechos para serviços externos, mas a primeira configuração precisa baixar dependências e modelos.",
-        "en": "Inference does not send segments to external services, but initial setup must download dependencies and models."
-      }
+      "consequences": [
+        {
+          "pt": "A inferência não envia trechos para serviços externos, mas a primeira configuração precisa baixar dependências e modelos.",
+          "en": "Inference does not send segments to external services, but initial setup must download dependencies and models."
+        }
+      ]
     },
     {
       "id": "ADR-003",
@@ -176,10 +144,12 @@
         "pt": "Limitar a fila a uma janela e descartar a janela antiga quando necessário.",
         "en": "Limit the queue to one window and discard the older window when necessary."
       },
-      "consequences": {
-        "pt": "O processamento prioriza trechos recentes e evita uma fila crescente, embora possa perder áudio quando o sistema estiver sob carga.",
-        "en": "Processing prioritizes recent segments and prevents an ever-growing queue, though audio may be dropped under heavy system load."
-      }
+      "consequences": [
+        {
+          "pt": "O processamento prioriza trechos recentes e evita uma fila crescente, embora possa perder áudio quando o sistema estiver sob carga.",
+          "en": "Processing prioritizes recent segments and prevents an ever-growing queue, though audio may be dropped under heavy system load."
+        }
+      ]
     }
   ],
   "tradeOffs": [
@@ -188,13 +158,9 @@
         "pt": "Executar a transcrição e a tradução localmente.",
         "en": "Run transcription and translation locally."
       },
-      "benefits": {
-        "pt": "Evita enviar áudio ou texto da sessão a serviços remotos e dispensa chave de API para inferência.",
-        "en": "Avoids sending session audio or text to remote services and requires no API key for inference."
-      },
-      "costs": {
-        "pt": "A inferência consome recursos do computador e os modelos precisam ser baixados na configuração inicial.",
-        "en": "Inference uses the computer's resources, and models must be downloaded during initial setup."
+      "rationale": {
+        "pt": "Benefícios: Evita enviar áudio ou texto da sessão a serviços remotos e dispensa chave de API para inferência.\nCustos: A inferência consome recursos do computador e os modelos precisam ser baixados na configuração inicial.",
+        "en": "Benefits: Avoids sending session audio or text to remote services and requires no API key for inference.\nCosts: Inference uses the computer's resources, and models must be downloaded during initial setup."
       }
     },
     {
@@ -202,13 +168,9 @@
         "pt": "Manter a fila de áudio limitada a uma janela.",
         "en": "Keep the audio queue limited to one window."
       },
-      "benefits": {
-        "pt": "Evita o acúmulo de trechos antigos e prioriza menor atraso.",
-        "en": "Prevents stale segments from accumulating and prioritizes lower latency."
-      },
-      "costs": {
-        "pt": "Pode descartar uma janela de áudio se a inferência não acompanhar a captura.",
-        "en": "May discard an audio window if inference cannot keep up with capture."
+      "rationale": {
+        "pt": "Benefícios: Evita o acúmulo de trechos antigos e prioriza menor atraso.\nCustos: Pode descartar uma janela de áudio se a inferência não acompanhar a captura.",
+        "en": "Benefits: Prevents stale segments from accumulating and prioritizes lower latency.\nCosts: May discard an audio window if inference cannot keep up with capture."
       }
     },
     {
@@ -216,13 +178,9 @@
         "pt": "Criar documentos Word somente mediante ação explícita.",
         "en": "Create Word documents only after an explicit user action."
       },
-      "benefits": {
-        "pt": "Evita exportações inesperadas e dá ao usuário controle sobre a criação do arquivo.",
-        "en": "Avoids unexpected exports and gives users control over file creation."
-      },
-      "costs": {
-        "pt": "O usuário precisa iniciar a exportação e escolher o destino do documento.",
-        "en": "Users must initiate the export and choose where to save the document."
+      "rationale": {
+        "pt": "Benefícios: Evita exportações inesperadas e dá ao usuário controle sobre a criação do arquivo.\nCustos: O usuário precisa iniciar a exportação e escolher o destino do documento.",
+        "en": "Benefits: Avoids unexpected exports and gives users control over file creation.\nCosts: Users must initiate the export and choose where to save the document."
       }
     }
   ],
